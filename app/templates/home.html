@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block title %}Bill Transparency Tracker{% endblock %}
+
+{% block content %}
+<section class="hero rounded-4 p-4 p-md-5 mb-4">
+  <div class="row g-4 align-items-center">
+    <div class="col-lg-8">
+      <h1 class="display-6 fw-bold mb-3">See Who Actually Benefits From Every Bill</h1>
+      <p class="lead mb-4">Search current Congress bills and inspect transparent, evidence-linked beneficiary analysis.</p>
+      <form class="row g-2" action="/search" method="get">
+        <div class="col-md-8">
+          <input class="form-control form-control-lg" type="text" name="q" placeholder="Search bills by keyword" required>
+        </div>
+        <div class="col-md-2">
+          <input class="form-control form-control-lg" type="number" min="1" name="congress" value="119">
+        </div>
+        <div class="col-md-2 d-grid">
+          <button class="btn btn-danger btn-lg" type="submit">Search</button>
+        </div>
+      </form>
+    </div>
+    <div class="col-lg-4">
+      <div class="card shadow-sm border-0">
+        <div class="card-body">
+          <h2 class="h5">How It Works</h2>
+          <ol class="mb-0">
+            <li>Search live GovInfo data.</li>
+            <li>Open official Congress bill detail.</li>
+            <li>Inspect transparent beneficiary evidence.</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="h4 mb-0">Recently Viewed Bills</h2>
+  </div>
+
+  {% if featured %}
+    <div class="row g-3">
+      {% for bill in featured %}
+        <div class="col-md-6 col-lg-4">
+          <div class="card h-100 shadow-sm">
+            <div class="card-body">
+              <div class="text-secondary small mb-2">{{ bill.bill_type|upper }} {{ bill.bill_number }} · Congress {{ bill.congress }}</div>
+              <h3 class="h6"><a class="stretched-link text-decoration-none" href="/bills/{{ bill.congress }}/{{ bill.bill_type }}/{{ bill.bill_number }}">{{ bill.title }}</a></h3>
+              <p class="text-secondary small mb-0">{{ bill.status }}</p>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="alert alert-light border">No cached bills yet. Run a search to get started.</div>
+  {% endif %}
+</section>
+{% endblock %}

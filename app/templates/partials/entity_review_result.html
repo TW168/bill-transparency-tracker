@@ -1,0 +1,3 @@
+<article id="entity-row-{{ row.id }}" class="alert {% if decision == 'approved' %}alert-success{% else %}alert-secondary{% endif %}">
+  Entity {{ row.entity.name if row.entity else row.id }} {{ decision }} by {{ row.reviewed_by }}.
+</article>

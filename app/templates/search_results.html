@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block title %}Search Bills{% endblock %}
+
+{% block content %}
+<section class="mb-4">
+  <h1 class="h3 mb-3">Search Bills</h1>
+  <form class="row g-2" method="get" action="/search">
+    <div class="col-md-8">
+      <input class="form-control" type="text" name="q" value="{{ query }}" placeholder="Keyword (e.g., defense procurement)">
+    </div>
+    <div class="col-md-2">
+      <input class="form-control" type="number" min="1" name="congress" value="{{ congress }}">
+    </div>
+    <div class="col-md-2 d-grid">
+      <button class="btn btn-primary" type="submit">Search</button>
+    </div>
+  </form>
+</section>
+
+<section>
+  {% if results %}
+    <div class="list-group">
+      {% for result in results %}
+        <a class="list-group-item list-group-item-action" href="/bills/{{ result.congress }}/{{ result.bill_type }}/{{ result.bill_number }}">
+          <div class="d-flex w-100 justify-content-between">
+            <h2 class="h6 mb-1">{{ result.title }}</h2>
+            <span class="badge text-bg-secondary">{{ result.status }}</span>
+          </div>
+          <p class="mb-1 text-secondary">{{ result.bill_type|upper }} {{ result.bill_number }} · Congress {{ result.congress }}</p>
+          <small class="text-secondary">Introduced/updated: {{ result.introduced_date or "N/A" }}</small>
+        </a>
+      {% endfor %}
+    </div>
+
+    <nav class="mt-3" aria-label="Search pagination">
+      <ul class="pagination">
+        <li class="page-item {% if not pager.has_prev %}disabled{% endif %}">
+          <a class="page-link" href="/search?q={{ query }}&congress={{ congress }}&page={{ pager.page - 1 }}">Previous</a>
+        </li>
+        <li class="page-item disabled"><span class="page-link">Page {{ pager.page }} of {{ pager.total_pages }}</span></li>
+        <li class="page-item {% if not pager.has_next %}disabled{% endif %}">
+          <a class="page-link" href="/search?q={{ query }}&congress={{ congress }}&page={{ pager.page + 1 }}">Next</a>
+        </li>
+      </ul>
+    </nav>
+  {% elif query and not govinfo_api_configured %}
+    <div class="alert alert-danger">
+      Search is unavailable because <strong>GOVINFO_API_KEY</strong> is not configured in <code>.env</code>.
+      Add your key, restart the app, then search again for "{{ query }}".
+    </div>
+  {% elif query and search_error %}
+    <div class="alert alert-danger">
+      {{ search_error }} Try a shorter query or different keywords.
+    </div>
+  {% elif query %}
+    <div class="alert alert-warning">No results found for "{{ query }}" in Congress {{ congress }}.</div>
+  {% else %}
+    <div class="alert alert-light border">Enter a keyword to search bills.</div>
+  {% endif %}
+</section>
+{% endblock %}

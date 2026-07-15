@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block title %}{{ bill.bill_type|upper }} {{ bill.bill_number }} · Bill Detail{% endblock %}
+
+{% block content %}
+<section class="mb-4">
+  <div class="d-flex flex-wrap justify-content-between gap-3 align-items-start">
+    <div>
+      <div class="text-secondary small">Congress {{ bill.congress }}</div>
+      <h1 class="h3 mb-2">{{ bill.bill_type|upper }} {{ bill.bill_number }} — {{ bill.title }}</h1>
+      <div class="text-secondary">Sponsor: {{ bill.sponsor or "Unavailable" }}</div>
+    </div>
+    <span class="badge text-bg-primary align-self-start">{{ bill.status }}</span>
+  </div>
+</section>
+
+<div class="row g-4">
+  <div class="col-lg-8">
+    <section class="card shadow-sm mb-4">
+      <div class="card-body">
+        <h2 class="h5">Summary</h2>
+        <p class="mb-0">{{ bill.summary or "No summary available." }}</p>
+      </div>
+    </section>
+
+    <section class="card shadow-sm">
+      <div class="card-body">
+        <h2 class="h5">Recent Actions</h2>
+        {% if bill.actions_json %}
+          <ul class="mb-0">
+            {% for action in bill.actions_json[:8] %}
+              <li>{{ action.text if action.text else action }}</li>
+            {% endfor %}
+          </ul>
+        {% else %}
+          <p class="mb-0 text-secondary">No action timeline available yet.</p>
+        {% endif %}
+      </div>
+    </section>
+  </div>
+
+  <div class="col-lg-4">
+    <section class="card shadow-sm mb-3">
+      <div class="card-body">
+        <h2 class="h5">Who Actually Benefits</h2>
+        <div class="mb-3">
+          {% set label = concentration.label if concentration else 'broad' %}
+          {% if label == 'narrow' %}
+            <span class="badge score-badge score-narrow">Narrow</span>
+          {% elif label == 'moderate' %}
+            <span class="badge score-badge score-moderate">Moderate</span>
+          {% else %}
+            <span class="badge score-badge score-broad">Broad</span>
+          {% endif %}
+          {% if concentration %}
+            <span class="text-secondary small">Score {{ '%.2f'|format(concentration.score) }}</span>
+          {% endif %}
+        </div>
+
+        <h3 class="h6">Layer A: Broad Beneficiaries</h3>
+        {% if bill.beneficiaries %}
+          <div class="d-flex flex-wrap gap-2 mb-3">
+            {% for benefit in bill.beneficiaries %}
+              <span class="badge text-bg-light border" title="{{ benefit.evidence }}">{{ benefit.group.name }}</span>
+            {% endfor %}
+          </div>
+        {% else %}
+          <p class="small text-secondary">No rule-based matches yet.</p>
+        {% endif %}
+
+        <h3 class="h6">Layer B: Confirmed Named Beneficiaries</h3>
+        {% if confirmed_entities %}
+          <ul class="small mb-3">
+            {% for item in confirmed_entities %}
+              <li>
+                {{ item.entity.name }}
+                <div class="text-secondary">Evidence: {{ item.evidence_text or "Approved after review" }}</div>
+              </li>
+            {% endfor %}
+          </ul>
+        {% else %}
+          <p class="small text-secondary">No confirmed named beneficiaries yet.</p>
+        {% endif %}
+
+        {% if pending_entities %}
+          <div class="alert alert-warning py-2 px-3 mb-0 small">
+            {{ pending_entities|length }} AI-suggested entities pending human review.
+          </div>
+        {% endif %}
+      </div>
+    </section>
+
+    <section class="card border-0 bg-light-subtle">
+      <div class="card-body small text-secondary">
+        Sources: Congress.gov bill detail, GovInfo search metadata, LDA filings (where available).
+      </div>
+    </section>
+  </div>
+</div>
+{% endblock %}

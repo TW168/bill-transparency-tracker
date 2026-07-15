@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}Admin · Entity Review{% endblock %}
+
+{% block content %}
+<section class="mb-4">
+  <h1 class="h3">Admin: Entity Review Queue</h1>
+  <p class="text-secondary">Approve or reject AI-suggested named beneficiaries before they appear as confirmed.</p>
+</section>
+
+{% if pending %}
+  <div class="vstack gap-3">
+    {% for row in pending %}
+      <article id="entity-row-{{ row.id }}" class="card shadow-sm">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-start gap-3">
+            <div>
+              <h2 class="h5 mb-1">{{ row.entity.name if row.entity else "Unknown entity" }}</h2>
+              <div class="small text-secondary mb-2">Bill: {{ row.bill_type|upper }} {{ row.bill_number }} (Congress {{ row.congress }})</div>
+              <p class="mb-2"><strong>Evidence:</strong> {{ row.evidence_text or "No rationale provided." }}</p>
+              <span class="badge text-bg-warning">Pending</span>
+            </div>
+            <div class="d-flex gap-2">
+              <button
+                type="button"
+                class="btn btn-success btn-sm"
+                hx-post="/admin/entity-review/{{ row.id }}/approve"
+                hx-target="#entity-row-{{ row.id }}"
+                hx-swap="outerHTML"
+              >Approve</button>
+              <button
+                type="button"
+                class="btn btn-outline-danger btn-sm"
+                hx-post="/admin/entity-review/{{ row.id }}/reject"
+                hx-target="#entity-row-{{ row.id }}"
+                hx-swap="outerHTML"
+              >Reject</button>
+            </div>
+          </div>
+        </div>
+      </article>
+    {% endfor %}
+  </div>
+{% else %}
+  <div class="alert alert-light border">No pending entities to review.</div>
+{% endif %}
+{% endblock %}

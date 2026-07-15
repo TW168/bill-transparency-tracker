@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}About{% endblock %}
+
+{% block content %}
+<section class="mb-4">
+  <h1 class="h3">About This Project</h1>
+  <p>This tracker focuses on transparent beneficiary analysis: not whether a bill is good or bad, but who is most likely to benefit and why.</p>
+</section>
+
+<div class="row g-4">
+  <div class="col-lg-6">
+    <div class="card h-100 shadow-sm">
+      <div class="card-body">
+        <h2 class="h5">Methodology</h2>
+        <ul class="mb-0">
+          <li>Layer A applies deterministic rules to policy area, subjects, and committees.</li>
+          <li>Layer B uses lobbying filing matches and AI-assisted suggestions.</li>
+          <li>AI suggestions remain pending until owner approval in admin review.</li>
+          <li>Every public beneficiary claim must have inspectable evidence.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-6">
+    <div class="card h-100 shadow-sm">
+      <div class="card-body">
+        <h2 class="h5">Data Sources</h2>
+        <ul class="mb-0">
+          <li><a href="https://api.congress.gov/" target="_blank" rel="noopener">Congress.gov API</a></li>
+          <li><a href="https://www.govinfo.gov/features/search-service-overview" target="_blank" rel="noopener">GovInfo Search Service</a></li>
+          <li><a href="https://lda.senate.gov/api/" target="_blank" rel="noopener">Senate LDA API</a></li>
+          <li><a href="https://usafacts.org/" target="_blank" rel="noopener">USAFacts (optional context imports)</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

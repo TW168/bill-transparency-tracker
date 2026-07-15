@@ -1,0 +1,41 @@
+:root {
+  --bs-primary: #0A3161;
+  --bs-danger: #B31942;
+  --bs-body-color: #132030;
+  --bs-secondary-color: #5A6B7B;
+  --bs-light-bg-subtle: #f4f7fb;
+}
+
+body {
+  background: linear-gradient(180deg, #ffffff 0%, #f8fbff 55%, #ffffff 100%);
+}
+
+.site-wordmark {
+  font-family: Georgia, serif;
+  letter-spacing: 0.02em;
+}
+
+.hero {
+  background:
+    radial-gradient(circle at 100% 0%, rgba(10, 49, 97, 0.12), transparent 40%),
+    radial-gradient(circle at 0% 100%, rgba(179, 25, 66, 0.08), transparent 42%),
+    #ffffff;
+  border: 1px solid rgba(10, 49, 97, 0.12);
+}
+
+.score-badge {
+  font-size: 0.85rem;
+  margin-right: 0.5rem;
+}
+
+.score-broad {
+  background: #0c6efd;
+}
+
+.score-moderate {
+  background: #b98500;
+}
+
+.score-narrow {
+  background: #B31942;
+}

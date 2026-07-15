@@ -8,7 +8,7 @@ Most bill-tracking sites (like [GovTrack](https://www.govtrack.us/congress/bills
 
 ## Status
 
-🚧 Early development. See [CHANGELOG.md](CHANGELOG.md) for progress and [docs/SDD.md § 15](docs/SDD.md#15-open-decisions-track-and-resolve-beforewhile-building) for open decisions.
+Core v1 scaffold is implemented: public pages, admin rule/entity pages, DB models, analysis services, migrations scaffold, and Docker setup. See [CHANGELOG.md](CHANGELOG.md) for current details.
 
 ## Tech stack
 
@@ -23,9 +23,29 @@ FastAPI · Jinja2 · Bootstrap 5 · MySQL 8 · SQLAlchemy 2.0 · Alembic · http
 
 ## Getting started
 
-1. Copy `.env.example` to `.env` and fill in your API keys (see comments in the file for where to get each one).
-2. `docker compose up --build` (once the compose file exists — see [docs/SDD.md § 14](docs/SDD.md#14-deployment)).
+### Local development (venv)
+
+1. Create and activate a virtual environment:
+	- `python3 -m venv .venv`
+	- `source .venv/bin/activate`
+2. Install dependencies:
+	- `python -m pip install --upgrade pip`
+	- `python -m pip install -r requirements.txt`
+3. Copy `.env.example` to `.env` and fill in keys/credentials.
+4. Run the app:
+	- `uvicorn app.main:app --reload`
+5. Visit `http://localhost:8000`.
+
+### Docker
+
+1. Copy `.env.example` to `.env` and adjust values as needed.
+2. `docker compose up --build`
 3. Visit `http://localhost:8000`.
+
+### Tests
+
+- `ruff check app tests`
+- `pytest -q`
 
 ## Contributing
 
